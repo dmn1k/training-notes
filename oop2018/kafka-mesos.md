@@ -1,0 +1,22 @@
+# Kafka + Mesos
+
+- Kafka: Distributed Commit Log (Replication Factory, configurable scalability)
+- can be used for things like log/sensor analysis 
+- built for high scale and scalability
+- Kafka Connect -> Kafka Cluster -> Kafka Connect
+- Kafka Streams uses Kafka Cluster, is part of application
+- Confluent builds components around kafka (APIs for multiple languages, REST, Schema Validation, E2E Monitoring, ...)
+- All consumers can consume in their pace (when and how often they want)
+- Stream Processing: Process data while in motion, no storage before processing
+- Spark, Flink: Part of big data cluster, everything has to be deployed there
+- Kafka streams is just a library
+- Similar operations to flink and spark (map, filter, aggregate, join)
+- flink and spark better to process all data at once
+- kafka streams includes concept of tables
+- KSQL: Streaming query language on top of kafka
+- KSQL alternative to custom java code
+- KSQL: window über gewissen ausschnitt des streams möglich
+- Kubernetes now supported on Mesos
+- components on mesos: zookeeper, kafka broker, kafka streams app
+- kafka VIP connection: one static url to connect to
+- => ny times example for event storage at scale

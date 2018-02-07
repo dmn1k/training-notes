@@ -1,0 +1,25 @@
+# Consumer driven contract testing
+
+- Altes konzept: Martin Fowler 2004
+- Ermöglicht flexibles Testen in verteilten Systemen
+- Konsumenten treiben die Tests => Nur das was ein Konsument wirklich braucht
+- Integrativer Test in Microservice-Environment schwierig wegen Testdaten (jeder Service hat potentiell eigene Datenhaltung)
+- Integrated testing doesnt scale => es skaliert nicht, immenser koordinationsaufwand => verteilter monolith
+- Consumer hat Black Box Sicht auf Contract, Producer white box sicht
+- Spring cloud contracts: 
+    - Groovy DSL 
+    - Beispielbasiert (Beispielrequest und erwarteter response)
+    - In Maven/Gradle integrierbar
+    - Kann darauf Stubs erzeugen (=> WireMock Server)
+    - Es wird auch Testcode generiert
+- Out of scope:
+    - security (bspw access tokens die mitgeschickt werden)
+    - performance (erwartete antwortzeiten usw)
+    - Business Logic (state, aka darf bestimmten req nur einmal erlauben)
+- Kontrakte liegen hier beim Provider, der alle Kontrakte kennen muss
+- Kontrakte werden in Artifactory/Nexus gepublished
+- Deploymentreihenfolge wichtig!
+- Abwärtskompatibilitätstests möglich: Provider testet gegen ältere Contracts
+- Kann standalone laufen (nicht spring/java abhängig)
+- Messaging möglich
+- Integration mit Fremd-APIs (kein consumer driven contract): Proxy Projekt, das Contracts enthält und auf Fremd-API delegiert

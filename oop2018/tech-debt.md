@@ -1,0 +1,25 @@
+# Umgang mit technischen Schulden
+
+- CQSE: Aus TUM, messen wir das richtige?
+- Technische Schulden: "Ihr habt es doch eingebaut"
+- "7->9 Stellen Problematik" ist nur Symptom, tech. Schulden sind Ursache
+- Copy-paste analyse, Verschachtelungstiefe, Architekturchecks
+- Wenn nicht aktiv und kontinuierlich aufgeräumt wird, nehmen Findings mit der Zeit zu
+- Viele Faktoren müssen zusammenspielen für nachhaltige Änderung
+- Teamscale-Dashboard 
+- Tod der tausend Nadelstiche: Einzelnes Finding ist nicht schlimm aber mit der Zeit sammelt sich einiges an
+- Sehr niedrige Schwelle neue Findings zu entdecken notwendig
+- Teamscale: Inkrementell (hängt direkt an git), keine Batchanalyse
+- Parallele Analyse auf allen Branches möglich
+- Ein Qualitätsziel für die ganze SW nicht sinnvoll (bspw. wird nicht alles in gleichem Maß weiterentwickelt)
+    - No new findings
+    - No findings in changed code
+    - No findings => eher unrealistisch
+- Feedback in Echtzeit (wieviel Tech debt neu, unverändert, abgebaut) => bringt Entwickler dazu auf gute Qualität zu achten
+- Expliziter Quality Manager (Rolle, nicht unbedingt Person)
+- Feedback Loops:
+    - Entwickler Feedback über Dashboard
+    - Längerer Zyklus mit Quality Manager
+    - Quality Report an Project Manager, GF, Team, ...
+- Zielkonflikt neue Features vs tech debt abbauen ist inhärent immer da, wird aber durch Transparenz einfacher damit umzugehen
+- Clone detection muss nicht unbedingt dazu führen Klone zu entfernen, wissen wo sie sind kann reichen (Teamscale schickt dann Warnung)
