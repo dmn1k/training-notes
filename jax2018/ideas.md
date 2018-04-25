@@ -1,0 +1,19 @@
+- Java 9+ Talk (Releasezyklus, LTS, Modulsystem, missioncontrol usw open sourced, G1 collector, ZGC, WebStart discontinued...)
+- Wie spielen Maven und Module zusammen?
+- Unterschiede in module-exports: requires, opens, provides, ...
+- NTTData -> Ikigai (jap. learning framework)
+- Web Components anschauen, genau wie Angular Elements (Angular => Web Components)
+- DPL in NG ist extremer Lockin auf Angular, weil alles davon abhängen wird. Evtl besser WebComponents (Angular Elements?)
+- asciidoc -> revealjs (frank hat hier ahnung)
+- Microfrontend-Poc anschauen
+- cypress.io e2e tests
+- MaFit-Vorträge filmen und intern archivieren
+- Weiterbildungskalender
+- Es muss klar sein wer wo hin darf und für alles was nicht offen ist (Arch-Kata) einen gleichwertigen Ersatz geben
+- Teilnehmerlisten wirklich notwendig?
+- "Könner" hervorheben, aber taktvoll. Wie?
+- Mal CodeWars und CodinGame verwenden
+- Webmontage in NBG?
+- "KloKlug", Klowledge Manager: Infos auf Toilette
+- Warum keine Scheuklappen: Resilient gegenüber den (sicher irgendwann kommenden) Änderungen sein => wertvoller für Firma und sicherer
+    - Außerdem: Ermöglicht paradoxerweise erst Fokus, weil man vieles einfach kennt

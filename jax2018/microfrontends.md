@@ -1,0 +1,38 @@
+# No-Framework Microfrontends
+@dschulten
+
+- Normalerweise ein Framework für SPA mit großer Runtime (Angular, Vue, ...)
+- Gefahr: Frontend-Monolith (komplex, schwer änderbar)
+- Framework-Komponenten als Lib: Framework-Lockin, sogar auf Major-Version
+- Ziel: Unabhängige, überall verwendbare Komponenten
+- Microfrontend: Integriert auf UI, nicht auf Daten (Komponente spricht mit eigenem Service)
+- Kein Framework mehr im Browser
+- Ponyfill: Wie Polyfill aber als Library, ersetzt also Browserfunktionalität nicht transparent im globalen Namespace sondern konkret als lib
+- Microfrontend hat explizit kein Eigentum an der Seite, daher bspw. Adresszeile tabu, CSS scoping, klein, leichtgewichtig
+- Empfehlung: Nicht auf ein JS-Framework unumkehrbar festlegen, da sehr volatiles Umfeld (siehe AngularJS)
+- Technologie:
+    - Svelte.js
+    - Stencil.js
+    - Vanilla JS (siehe Chris Ferdinandi)
+    - Transclusion (Projekt: h-include)
+- Svelte: Quasi Compiler JS+Framework->PlainJS, von Richard Harris (wie u.a. rollup für treeshaking)
+    - Hat online REPL (https://svelte.technology) 
+    - Compiler kann Plain JS erzeugen aber genaus WebComponent (per compiler switch)
+    - Server-Side Component mit Hydration (SSR) => Node rendered serverseitig direkt HTML; JS adaptiert HTML und füllt mit Leben (=> Hydration, beachte Caching bei gleichen URLs)
+    - Debugging unproblematisch durch Sourcemaps
+    - Svelte Component:
+        - HTML-Datei: HTML angereichert mit Svelte Tags
+        - \<script\>-Tag: Data & Behavior
+        - Komponente hat Daten, diese können auch computed sein
+        - Basic MVC
+        - Hat Kontrollstrukturen im Markup wie {#if}, {#each}, {#await promise}
+        - Können geschachtelt werden: import Comp from xy; 
+        - Kann methods haben, die dann bspw an onclick gebunden werden
+        - Wenn set auf Daten(Model) aufgerufen wird, wird Markup aktualisiert
+    - svelte kümmert sich um css-scoping
+    - Compiler entfernt unbenutztes CSS
+    - Kann Style an Head-Element hängen oder CSS-Datei generieren
+    - Unterstützt CSS-Preprocessors wie SASS
+    - Props down - events up: Kommunikation zwischen verschachtelten Komponenten (2way-binding geht theoretisch auch ist aber nicht empfohlen)
+    - PoC auf Github: github.com/escalon/microfrontends
+    - https://microservice-websites.netlify.com, @\_lizzelo\_

@@ -1,0 +1,63 @@
+# Architectures for big Enterprise Applications with Angular
+Manfred Steyer - softwarearchitekt.at
+
+- Typisch: AppModul als Root, Modul pro feature (bei Verletzung 7+/-2 Regel splitten), shared modules
+- Wenn das nicht reicht:
+    - npm-Pakete
+    - Monorepo-Ansatz
+    - Microservices
+- npm:
+    - Wiederverwendbare Bibliotheken
+    - Enthält: node_modules, eigener Code, package.json (manifest)
+    - Vorsicht: Dependencies werden bei Verwender transitiv mitinstalliert. Daher bspw. besser keine Angular-Abhängigkeiten
+    - Besser: peerDependencies (werden nicht mitinstalliert, nur info dass Konsument diese dependency benötigt)
+    - Barrels: In ES ist jedes File ein Modul => Barrel als Fassade (ein File exportiert alles, was der Konsument benötigt)
+    - Wenn Ng-Module angeboten werden: Bei Providern aufpassen!
+        - Providern sind normalerweise global
+        - Provider sind nicht tree-shakable (tree-shaking: alles was nicht benötigt wird, wird aus bundle entfernt)
+        - Wenn Lazy-Loading: Provided Services nicht mehr singleton
+        - Daher besser um Services zum Konsumenten zu bringen:
+            - 2 Arten: 
+            - Modulkonfig-Provider (so wie Router über statische Methode erzeugen und Konfig übergeben) => Nur in Root-Modul importieren (daher name forRoot, sonst forChild)
+            - Restliche Provider: Bis Angular 6 auch bei ModuleWithProviders dazupacken, danach: Treeshakable Providers: @Injectable({providedIn: 'root'}) => muss dann auch nicht in providers eingetragen werden
+            - Nur lazy-loaded module bekommen eigenen dependency injection scope
+    - Angular Package Format beachten!
+        - ng-packagr und andere benutzen
+        - ng-cli 6 wird ng-packagr direkt wrappen => ng generate library my-lib und ng generate application playground-app für Testanwendung
+        - ng-cli 6: projects-ordner statt src. Aber src bleibt wegen Abwärtskompatibilität (kann gelöscht werden wenn man mit Subprojekten arbeitet)
+        - playground-app sollte an erster Stelle in angular.json stehen => wird zur std-app, wird bei ng serve gestartet
+        - in tsconfig.json den Lib-Pfad eintragen (nicht direkt im import!). für dev den pfad in projects, zum testen den pfad in node_modules (oder zwei configs)
+    - mit npm version [path|minor|major] version erhöhen
+    - ng build && npm public --registry <registry-url> && npm install --registry <registry-url>
+    - npm set registry <registry-url> oder .npmrc in Projekt-Root
+    - Registry: Nexus, Artifactory, TFS oder Verdaccio (sehr leichtgewichtig, npm i -g verdaccio && verdaccio, fungiert auch als cache)
+    - Damit dann voll in Live-Reloading Mechanismus integriert 
+    - Vorteile: Libs können verteilt werden, sind einzeln versioniert, Entkopplung zwischen Lib und App
+    - Nachteile: Wie Vorteile, aus anderer Perspektive. Verteilung: Kann aufwändig und lästig werden, Versionierung: Wie wird mit alten Versionen umgegangen, Entkopplung: Wenig sinnvoll wenn App-Author==Lib-Author
+- monorepo:
+    - Quasi ein Workspace
+    - Vorteile: Jeder muss neuste Version nutzen, Keine Versionskonflikte, Keine Verteilung, Neue libs erzeugen ist so aufwendig wie Erzeugung eines neuen Ordners
+    - Zwei Ausprägungen: 
+        - Project Monorepo (wie eclipse workspace)
+        - Company Monorepo (siehe Google) => fail fast weil alle automatisch neuste Version von libs verwenden, benötigt Extra-Tooling wie intelligentes git pull (nur das was benötigt wird)
+    - nrwl.io/nx: Lib und Codegenerator, erweitert Angular-CLI
+        - npm i -g @nrwl/schematics / @angular/cli
+        - create-nx-workspace myworkspace
+        - ng generate app myapp
+        - ng generate library lib
+        - ng serve --app=myapp
+    - Monorepo-Ansatz ist kein Committment auf Ewigkeit: Kann libs ausgliedern
+    - Statt eigene Registry kann man auch git submodules verwenden
+    - Vieles aus nx wandert in die ng-cli, aber nx wird auch ständig erweitert, bspw:
+        - Recompile changed apps only
+        - Format code/check format
+        - Lib-Zugriffsregeln definieren
+        - Modulstruktur visualisieren
+- microservices:
+    - Neben vielen Vorteilen allgemeiner Art, muss man sich hier um UI-Composition kümmern
+        - Hyperlinks: Jede Anwendung ist eigene SPA, vgl. SCS
+        - Shell in die Anwendungen geladen werden:
+            - IFrames: Strong isolation, straight forward vs overlapping elements nicht möglich & lots of page requests
+            - Web Components: Standard, eigene HTML-Elemente defnieren, CSS Isolation über Shadow DOM, können genested werden vs. Framework Support
+            - Bootstrapping mehrerer SPAs innerhalb einer index.html: Kein Standard, kein Nesting; Vorteil: Fast wie Web Components und daher evtl. Zwischenlösung
+        - Angular >= 6 => Angular Elements => Kompiliert Angular-Komponenten in Web-Components
