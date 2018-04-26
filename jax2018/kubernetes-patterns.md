@@ -1,0 +1,60 @@
+# Kubernetes Patterns
+Roland Huß, Red Hat, @ro14nd
+
+- Kubernetes: Container orchestration platform (scheduling, scaling, self-healing, service discovery, rollout and rollbacks)
+- Declarative, resource-centric API
+- Es wird ein Zielzustand definiert und Kubernetes sorgt dafür, dass dieser Zustand erreicht und beibehalten wird (Self-Healing)
+- client (kubectlr)=> master on server => nodes
+- Pod (atomic container unit) => services => higher-order concepts like namespaces
+- Pod: Einer oder mehr container die sich IP, ports und optional auch volumes teilen. Hat labels. Atomare Einheit in Kubernetes
+- Pod Declaration in YAML-File
+- Replica Set: manages pods. anzahl pods und label selector. erzeugt neue pods wenn weniger als die definierte anzahl aktiv sind
+- service: permanent ip address for set of pods
+- es gibt viele objekte mehr, die alle in irgendeiner weise auf einen oder mehrere pods verweisen
+- um automatisch zu skalieren müssen einige voraussetzungen erfüllt sein:
+    - harte voraussetzungen wie ip frei, port nicht belegt, secrets und configs vorhanden
+    - resources: cpu, network und memory requests und limits. compressible und incompressible (cpu kann begrenzt werden, memory-footprint der app nicht)
+    - request: lower bound, limit: upper boundary
+    - qos classes best effort(no request and limit), burstable(request\<limit), guaranteed(request==limit)
+- declarative vs imperative deployment: declarative deployment durch deployment-objekt (pod-template, erzeugt replicasets, erlaubt rollback, mehrere updatestrategies verfügbar)
+- Rolling Updates: Kubernetes kann rolling updates, aber sind nicht for free (alte und neue version muss mit db-schema arbeiten können, apis müssen abwärtskompatibel sein, ...)
+- Canary Release: Neue Version läuft parallel zu alter Version (bspw. nur 10% der Pods auf neuer Version)
+- Blue-green deployment: Wenn alle neuen pods laufen wird auf einen schlag umgestellt
+- Initializer pattern:
+    - Init container (one shot action, part of a pod, needs to be idempotent)
+- Sidecar pattern:
+    - extend functionality of existing container
+    - weiterer container im pod 
+    - bsp: sidecar holt daten aus git, haupt-container nutzt dateien die im filesystem liegen
+    - "aspect-oriented containers"
+- ambassador pattern:
+    - also known as proxy
+    - spezialfall eines sidecars
+    - bspw für circuit breaker
+    - bsp: memcached als db-cache, transparent für hauptcontainer
+- adapter pattern
+    - gegenteil von ambassador
+    - quasi reverse proxy
+    - bspw. monitoring und logging
+    - monitoring-sidecar bietet daten in std-format an
+- configurational patterns (manage config for different environments):
+    - EnvVar configuration (recommended by Twelve Factor App-manifesto, universal, drawbacks: kann nur beim container-start gesetzt werden, bei sehr vielen vars wirds unübersichtlich)
+        - können direkt in yaml angegeben werden, oder per secretKeyRef/configKeyRef
+    - configuration resource
+        - ConfigMap und Secret: Intrinsic k8s concepts
+        - ConfigMap ist eigenes k8s-objekt, das config enthält, in pod wird über volumeMount die ConfigMap referenziert (für jede config wird ein file angelegt, das die app auslesen kann)
+        - similar for secrets, except values are base64 encoded
+    - configuration template
+        - ConfigMaps not suitable for large apps, especially if different configmaps for different environment (differs only in small parts)
+        - ConfigurationTemplate: init-container der werte aus ConfigMap holt, ConfigMap enthält nur env-abhängige werte, rest kommt direkt aus init-container
+        - init-container schreibt config-files in filesystem, haupt-container liest sie aus
+    - Immutable configuration:
+        - complete config in a configuration-container
+        - image per environment
+        - docker link between containers, NOT supported in k8s itself
+        - alternative: mount same volume and put config there
+        - drawback: need deployment descriptor per env, since config-container needs to be specified in the descriptor directly 
+    - Vorteile immutable config: kann versioniert werden, kann in repository liegen, leicht verständlich
+- kubernetes selbst kann erweitert werden, eigene resource-types
+- leanpub.com/k8spatterns
+- github.com/ro14nd-talks/kubernetes-patterns

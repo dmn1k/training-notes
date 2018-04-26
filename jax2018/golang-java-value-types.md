@@ -1,0 +1,30 @@
+# Comparing Golang and understanding Java Value Types
+
+- go: compiled (no vm), oo and functional
+- viele eigene features wie goroutines
+- parentheses optional
+- var name: type
+- golang kennt structs (value types), können per reference (pointer) übergeben werden
+- multiple return values, normalerweise zwei (return value und error state)
+- functions first-class citizens: können auch über- und zurückgegeben werden
+- no exception handling, error als return value
+- panic like java throw, aber sollte so nicht verwendet werden (eher wie java errors)
+- no real gc, only seems like one (no compacting)
+- wenn pointer auf local var aus func zurückgegeben wird, erkennt go das und legt var auf heap statt auf stack (in c würde das zu segmentation error führen)
+- goroutines: fibers, lightweight threads
+    - thread: context-switching by cpu, context saved in cpu-register, context of new thread loaded
+    - fibers/lightweight-threads: supported and optimized by compiler, much faster, can run much more fibers than threads
+    - built-in type channel: fixed-size FIFO to communicate between fibers
+- objects in go
+    - interfaces exist but different than in java: no implements keyword, just implicit (compiler checks if all interface-functions are implemented)
+    - structs cannot extend only contain other structs, looks like polymorphism but is not
+    - functions can work on "mimiced" inheritance
+- value types in java
+    - project valhalla in 2014 
+    - byte, short, int usw sind value types
+    - value types sind immutable
+    - valhalla: user-defined value types
+    - not objects, only hold value => no object identity, no reference to smth
+    - seit java 8: escape analysis, wenn lokale variable nicht zu groß ist, wird objekt auf stack angelegt
+    - value type arrays are CPU cache friendly (we work on them sequentially, objects are not sequential in memory due to ASLR and stuff like that)
+    - Codes like a class, works like an int
