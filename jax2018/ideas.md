@@ -7,6 +7,8 @@
 - asciidoc -> revealjs (frank hat hier ahnung)
 - Microfrontend-Poc anschauen
 - cypress.io e2e tests
+
+
 - MaFit-Vorträge filmen und intern archivieren
 - Weiterbildungskalender
 - Es muss klar sein wer wo hin darf und für alles was nicht offen ist (Arch-Kata) einen gleichwertigen Ersatz geben
